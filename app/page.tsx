@@ -2,12 +2,18 @@
 
 import Image from "next/image";
 import { useState, useCallback, useEffect, useRef } from "react";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 
 export default function Home() {
   const [length, setLength] = useState(20);
   const [numberAllowed, setNumberAllowed] = useState(false);
   const [characterAllowed, setCharacterAllowed] = useState(false);
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const showPasswordFn = () => {
+    setShowPassword(!showPassword);
+  };
 
   const generatePassword = useCallback(() => {
     let pass = "";
@@ -29,24 +35,32 @@ export default function Home() {
     generatePassword();
   }, [length, numberAllowed, characterAllowed, generatePassword]);
 
-  const copyPasswordToClipboad = () => {
-    window.navigator.clipboard.writeText(password);
+  const copyPasswordToClipboad = async () => {
+    await window.navigator.clipboard.writeText(password);
   };
   return (
     <div className="">
       <h1>Password Generator</h1>
-      <div className="">
+      <div className="flex">
         <input
-          type="text"
+          type={showPassword ? "text" : "password"}
           value={password}
           className="outline-none bg-gray-100 rounded-s-md p-3"
           readOnly
         />
+        <button onClick={showPasswordFn}>
+          {showPassword ? (
+            <IoMdEye className="h-16 w-6" />
+          ) : (
+            <IoMdEyeOff className="h-16 w-6" />
+          )}
+        </button>
+
         <button
           onClick={copyPasswordToClipboad}
           className="bg-blue-500 rounded-e-md p-3 text-white"
         >
-          Copy
+          Copy{" "}
         </button>
       </div>
       <div className="flex gap-3">
